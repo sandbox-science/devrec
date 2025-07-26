@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devrec"
+version = "0.0.1-alpha"
+description = "A CLI tool to record a developer's local workflow session, capturing shell commands, manual notes, and optionally Git activity or file edits, to produce a structured timeline or report."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+
+authors = [
+    { name = "Chris Dedman" }
+]
+
+dependencies = [
+    "typer>=0.9",
+    "rich>=13",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "flake8",
+    "mypy"
+]
+
+[project.scripts]
+devrec = "devrec.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
