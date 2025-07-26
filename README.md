@@ -43,3 +43,7 @@ devrec stop
 
 All session are saved in `~/.devrec/sessions/{timestamp}.json` and `.md`
 
+
+## Engineering Requirement Document
+
+You can find the ERD on [Proton Doc](https://drive.proton.me/urls/P3WXQMK1FR#HKBehxHS1qO5)
