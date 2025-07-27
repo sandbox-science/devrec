@@ -2,6 +2,10 @@
 
 **DevRec** is a lightweight CLI tool that records your local developer workflow. It captures notes, shell activity, and optionally Git actions to produce a structured, timestamped report, perfect for debugging, documentation, or reflection.
 
+> [!NOTE]
+>
+> More about the idea on this [article](https://listed.to/@Astra/63832/devrec-cli-developer-tool). 
+
 ---
 
 ## Features
@@ -42,7 +46,6 @@ devrec stop
 ```
 
 All session are saved in `~/.devrec/sessions/{timestamp}.json` and `.md`
-
 
 ## Engineering Requirement Document
 
