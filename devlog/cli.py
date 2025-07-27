@@ -6,7 +6,7 @@ from .logger import Logger
 
 app = typer.Typer()
 
-DATA_DIR = Path.home() / ".devrec" / "sessions"
+DATA_DIR = Path.home() / ".devlog" / "sessions"
 CURRENT = DATA_DIR.parent / "current.json"
 
 

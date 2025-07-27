@@ -65,7 +65,7 @@ class Session:
 
     def export_markdown(self):
         lines = [
-            f"# DevRec Session — {self.id}",
+            f"# DevLog Session — {self.id}",
             f"\U0001F4C1 **CWD**: {self.data['cwd']}",
             f"\U0001F551 **Start**: {self.data['start_time']}",
         ]
