@@ -1,5 +1,6 @@
 from .session import Session
 
+
 class Logger:
     def __init__(self, session: Session):
         self.session = session
