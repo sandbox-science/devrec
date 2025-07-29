@@ -56,7 +56,8 @@ class Session:
         self.data["events"].append({
             "timestamp": datetime.now().isoformat(timespec="seconds"),
             "type": event_type,
-            "directory": Path(os.getcwd()).name, # TODO: Find a better way to display directory
+            # TODO: Find a better way to display the directory
+            "directory": Path(os.getcwd()).name,
             "message": message
         })
 
@@ -95,6 +96,9 @@ class Session:
                     f"# DevLog — {data['log']}\n"
                 ]
             else:
+                # TODO: Find a better way to handle
+                # start_log and stop_log. This is
+                # too ugly.
                 start_log = data.get('start_time')
                 lines = [
                     f"## Session Log — {data.get("id")}",
