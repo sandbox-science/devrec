@@ -43,6 +43,13 @@ devlog note "Working on Sandbox Science Project"
 
 # End the session and export to Markdown
 devlog stop
+
+# Export your logs into markdown or HTML
+devlog export md
+devlog export html
+
+# Open a dashboard to display your logs
+devlog dashboard
 ```
 
 All session are saved in `~/.devlog/sessions/{timestamp}.json` and `.md`
