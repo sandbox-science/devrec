@@ -3,36 +3,63 @@
 
 <head>
       <meta charset="utf-8" />
-      <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-      <title>DevLog</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>DevLog Dashboard</title>
       <style>
+            :root {
+                  --bg-color: #0f172a;
+                  --sidebar-bg: #1e293b;
+                  --card-bg: #1e293b;
+                  --text-color: #e2e8f0;
+                  --accent-color: #38bdf8;
+                  --hover-bg: #334155;
+            }
+
+            body.light-mode {
+                  --bg-color: #f1f5f9;
+                  --sidebar-bg: #ffffff;
+                  --card-bg: #ffffff;
+                  --text-color: #1e293b;
+                  --accent-color: #2563eb;
+                  --hover-bg: #e2e8f0;
+            }
+
             body {
                   font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-                  background-color: #0f172a;
+                  background-color: var(--bg-color);
+                  color: var(--text-color);
                   margin: 0;
-                  padding: 0;
-                  color: #e2e8f0;
-                  line-height: 1.6;
                   display: flex;
                   flex-direction: column;
                   height: 100vh;
             }
 
-            header,
-            footer {
-                  background: linear-gradient(90deg, #1e293b, #334155);
-                  color: #f8fafc;
-                  padding: 20px;
-                  text-align: center;
+            /* Top Navbar */
+            .navbar {
+                  background: linear-gradient(90deg, var(--sidebar-bg), var(--hover-bg));
+                  display: flex;
+                  justify-content: center ;
+                  align-items: center;
+                  padding: 10px 20px;
                   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             }
 
-            header h1 {
-                  margin: 0;
-                  font-size: 2rem;
-                  letter-spacing: 1px;
+            .navbar .logo {
+                  font-size: 1.7rem;
+                  font-weight: bold;
+                  color: var(--accent-color);
+                  margin-right: 8px;
             }
 
+            .toggle-mode {
+                  cursor: pointer;
+                  background-color: transparent;
+                  border: none;
+                  color: var(--accent-color);
+                  font-size: 1.2rem;
+            }
+
+            /* Main Layout */
             main {
                   flex: 1;
                   display: flex;
@@ -44,19 +71,21 @@
 
             /* Sidebar */
             .sidebar {
-                  width: 220px;
-                  background-color: #1e293b;
+                  width: 240px;
+                  background-color: var(--sidebar-bg);
                   padding: 20px;
-                  border-right: 1px solid #334155;
+                  border-right: 1px solid var(--hover-bg);
                   overflow-y: auto;
                   flex-shrink: 0;
+                  display: flex;
+                  flex-direction: column;
                   border-radius: 10px;
             }
 
             .sidebar h3 {
-                  color: #38bdf8;
-                  margin-top: 0;
+                  color: var(--accent-color);
                   text-align: center;
+                  margin-bottom: 20px;
             }
 
             .sidebar ul {
@@ -65,51 +94,58 @@
             }
 
             .sidebar li {
-                  padding: 10px;
+                  padding: 12px;
                   cursor: pointer;
-                  border-radius: 10px;
-                  margin-bottom: 5px;
-                  transition: background 0.2s;
+                  border-radius: 8px;
+                  margin-bottom: 10px;
+                  transition: background 0.3s;
             }
 
             .sidebar li:hover,
             .sidebar li.active {
-                  background-color: #334155;
-                  color: #38bdf8;
+                  background-color: var(--hover-bg);
+                  color: var(--accent-color);
             }
 
-            /* Article container */
+            .sidebar a {
+                  color: inherit;
+                  text-decoration: none;
+                  display: block;
+                  font-weight: 500;
+            }
+
+            /* Main content */
             #articles {
                   flex: 1;
-                  padding: 20px;
+                  padding-left: 20px;
+                  padding-right: 20px;
                   overflow-y: auto;
             }
 
-            /* Article Card */
             article {
-                  background-color: #1e293b;
-                  border-radius: 10px;
-                  padding: 20px;
-                  margin-bottom: 20px;
-                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                  background-color: var(--card-bg);
+                  border-radius: 12px;
+                  padding: 24px;
+                  margin-bottom: 24px;
+                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
                   transition: transform 0.2s ease, box-shadow 0.2s ease;
             }
 
             article:hover {
-                  transform: translateY(-4px);
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
             }
 
             article h3,
-            h4 {
+            article h4 {
                   margin-top: 0;
-                  color: #38bdf8;
+                  color: var(--accent-color);
             }
 
             article p {
-                  background-color: #0f172a;
+                  background-color: var(--bg-color);
                   padding: 10px;
-                  border-left: 4px solid #38bdf8;
+                  border-left: 4px solid var(--accent-color);
                   font-size: 0.95rem;
                   border-radius: 5px;
             }
@@ -121,14 +157,13 @@
             }
 
             li {
-                  background: #0f172a;
+                  background: var(--bg-color);
                   padding: 10px;
                   border-radius: 10px;
                   margin-bottom: 8px;
-                  border: 1px solid #334155;
+                  border: 1px solid var(--hover-bg);
                   font-size: 0.95rem;
                   display: block;
-                  gap: 16px;
             }
 
             li span.time {
@@ -139,41 +174,43 @@
 
             footer {
                   font-size: 0.85rem;
-                  margin-top: auto;
-                  color: #94a3b8;
-            }
-
-            a {
-                  color: #60a5fa;
-                  text-decoration: none;
-            }
-
-            a:hover {
-                  text-decoration: underline;
+                  text-align: center;
+                  padding: 10px;
+                  background: var(--sidebar-bg);
+                  color: var(--text-color);
+                  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
             }
       </style>
 </head>
 
 <body>
-      <header>
-            <h1>📝 DevLog Dashboard</h1>
+      <header class="navbar">
+            <div class="logo">📝 DevLog Dashboard</div>
+            <button class="toggle-mode" onclick="toggleMode()">🌙</button>
       </header>
+
+      <!-- WARNING: DO NOT EDIT THE MAIN CONTENT.
+            PYTHON WILL AUTO-GENERATE THE SIDEBAR AND ARTICLES THERE -->
       <main>
-            <!-- WARNING: Do not edit the main content. -->
-
-            <!-- Sidebar for dates -->
             <aside id="sidebar" class="sidebar">
-                  <!-- Python will generate a list of dates here -->
+                  <!-- Python will generate links here -->
             </aside>
-
-            <!-- Main content area -->
             <section id="articles">
-                  <!-- Python will generate article sessions here -->
+                  <!-- Python will generate content here -->
             </section>
       </main>
+
       <footer>
-            <p>© 2025 DevLog – Built with ❤️ for developers</p>
+            © 2025 DevLog – Built with ❤️ for developers
       </footer>
+
+      <script>
+            function toggleMode() {
+                  document.body.classList.toggle('light-mode');
+                  const button = document.querySelector('.toggle-mode');
+                  button.textContent = document.body.classList.contains('light-mode') ? '🌞' : '🌙';
+            }
+      </script>
 </body>
 
 </html>
