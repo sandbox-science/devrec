@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="utf-8" />
+      <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+      <title>DevLog</title>
+      <style>
+            body {
+                  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+                  background-color: #0f172a;
+                  margin: 0;
+                  padding: 0;
+                  color: #e2e8f0;
+                  line-height: 1.6;
+                  display: flex;
+                  flex-direction: column;
+                  height: 100vh;
+            }
+
+            header,
+            footer {
+                  background: linear-gradient(90deg, #1e293b, #334155);
+                  color: #f8fafc;
+                  padding: 20px;
+                  text-align: center;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+
+            header h1 {
+                  margin: 0;
+                  font-size: 2rem;
+                  letter-spacing: 1px;
+            }
+
+            main {
+                  flex: 1;
+                  display: flex;
+                  max-width: 1400px;
+                  margin: 20px auto;
+                  width: 100%;
+                  overflow: hidden;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                  width: 220px;
+                  background-color: #1e293b;
+                  padding: 20px;
+                  border-right: 1px solid #334155;
+                  overflow-y: auto;
+                  flex-shrink: 0;
+                  border-radius: 10px;
+            }
+
+            .sidebar h3 {
+                  color: #38bdf8;
+                  margin-top: 0;
+                  text-align: center;
+            }
+
+            .sidebar ul {
+                  list-style: none;
+                  padding: 0;
+            }
+
+            .sidebar li {
+                  padding: 10px;
+                  cursor: pointer;
+                  border-radius: 10px;
+                  margin-bottom: 5px;
+                  transition: background 0.2s;
+            }
+
+            .sidebar li:hover,
+            .sidebar li.active {
+                  background-color: #334155;
+                  color: #38bdf8;
+            }
+
+            /* Article container */
+            #articles {
+                  flex: 1;
+                  padding: 20px;
+                  overflow-y: auto;
+            }
+
+            /* Article Card */
+            article {
+                  background-color: #1e293b;
+                  border-radius: 10px;
+                  padding: 20px;
+                  margin-bottom: 20px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                  transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            article:hover {
+                  transform: translateY(-4px);
+                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            }
+
+            article h3,
+            h4 {
+                  margin-top: 0;
+                  color: #38bdf8;
+            }
+
+            article p {
+                  background-color: #0f172a;
+                  padding: 10px;
+                  border-left: 4px solid #38bdf8;
+                  font-size: 0.95rem;
+                  border-radius: 5px;
+            }
+
+            ul.events {
+                  list-style: none;
+                  padding-left: 0;
+                  margin-top: 15px;
+            }
+
+            li {
+                  background: #0f172a;
+                  padding: 10px;
+                  border-radius: 10px;
+                  margin-bottom: 8px;
+                  border: 1px solid #334155;
+                  font-size: 0.95rem;
+                  display: block;
+                  gap: 16px;
+            }
+
+            li span.time {
+                  font-weight: bold;
+                  color: #fbbf24;
+                  min-width: 80px;
+            }
+
+            footer {
+                  font-size: 0.85rem;
+                  margin-top: auto;
+                  color: #94a3b8;
+            }
+
+            a {
+                  color: #60a5fa;
+                  text-decoration: none;
+            }
+
+            a:hover {
+                  text-decoration: underline;
+            }
+      </style>
+</head>
+
+<body>
+      <header>
+            <h1>📝 DevLog Dashboard</h1>
+      </header>
+      <main>
+            <!-- WARNING: Do not edit the main content. -->
+
+            <!-- Sidebar for dates -->
+            <aside id="sidebar" class="sidebar">
+                  <!-- Python will generate a list of dates here -->
+            </aside>
+
+            <!-- Main content area -->
+            <section id="articles">
+                  <!-- Python will generate article sessions here -->
+            </section>
+      </main>
+      <footer>
+            <p>© 2025 DevLog – Built with ❤️ for developers</p>
+      </footer>
+</body>
+
+</html>
