@@ -49,7 +49,7 @@ class Export:
             pos_json for pos_json in os.listdir(path_to_json)
             if pos_json.endswith('.json')
         ]
-        return json_files
+        return sorted(json_files, reverse=True)
 
     def _build_sidebar(self, soup, files):
         sidebar_section = soup.find("aside", id="sidebar")
@@ -88,7 +88,7 @@ class Export:
                 dt_start = datetime.fromisoformat(entry['start_time'])
                 dt_stop = datetime.fromisoformat(entry['stop_time'])
                 p.string = f"⏱️ Started: {dt_start.strftime('%H:%M:%S')} \
-                    | 🛑 Stopped: {dt_stop.strftime('%H:%M:%S')}"
+                    | 🛑 Ended: {dt_stop.strftime('%H:%M:%S')}"
                 new_article.append(p)
 
                 # Event list
@@ -143,7 +143,6 @@ class Export:
             with open(output_html, "w", encoding="utf-8") as out:
                 out.write(soup.prettify())
 
-        latest_file = sorted(files)[-1]
-        latest_html = Path((self.json_path.parent) / latest_file) \
+        latest_html = Path((self.json_path.parent) / files[0]) \
             .with_suffix(".html")
         shutil.copy(latest_html, (self.json_path.parent) / "index.html")
