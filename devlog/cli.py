@@ -89,12 +89,27 @@ def export(format: str) -> None:
 
 @app.command()
 def dashboard():
+    """
+    Open the dashboard for the logs.
+
+    Required to have run `devlog export html` prior.
+    """
     html_path = Path(DATA_DIR / "index.html")
     if html_path.exists():
         webbrowser.open(html_path.as_uri())
         typer.echo(f"[DEVLOG] Dashboard opened from {html_path}")
     else:
-        typer.echo(f"{html_path} does not exists.")
+        typer.echo(f"{html_path} does not exists. \
+            Run `devlog export html` first.")
+
+
+@app.command()
+def logs():
+    """
+    Display the logs in the CLI.
+    """
+    # TODO: Implement CLI display of the logs
+    pass
 
 
 if __name__ == "__main__":
