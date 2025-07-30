@@ -18,7 +18,7 @@ CURRENT = DATA_DIR.parent / "current.json"
 @app.command()
 def start() -> None:
     """
-    Start a session.
+    Start a new session.
     """
     if CURRENT.exists():
         typer.echo("[DEVLOG] session already in progress.")
@@ -33,7 +33,7 @@ def note(message: str) -> None:
     """
     Add a note to the active session.
 
-    :param message: The note the user want to log.
+    :param message: The note the user wants to log.
     :type message: str
     """
     if CURRENT.exists():
