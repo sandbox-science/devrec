@@ -1,9 +1,13 @@
 import typer
+import webbrowser
 
 from datetime import datetime
 from pathlib import Path
+
 from .session import Session
 from .logger import Logger
+from .export import Export
+
 
 app = typer.Typer()
 
@@ -16,9 +20,12 @@ def start() -> None:
     """
     Start a session.
     """
-    session = Session.start_new(DATA_DIR)
-    CURRENT.write_text(str(session.json_path))
-    typer.echo(f"✅ Session started: {session.id}")
+    if CURRENT.exists():
+        typer.echo("[DEVLOG] session already in progress.")
+    else:
+        session = Session.start_new(DATA_DIR)
+        CURRENT.write_text(str(session.json_path))
+        typer.echo(f"[DEVLOG] ✅ Session started: {session.id}")
 
 
 @app.command()
@@ -29,10 +36,16 @@ def note(message: str) -> None:
     :param message: The note the user want to log.
     :type message: str
     """
-    path = Path(CURRENT.read_text())
-    session = Session.load(path)
-    Logger(session).note(message)
-    typer.echo("📝 Note recorded.")
+    if CURRENT.exists():
+        path = Path(CURRENT.read_text())
+        session = Session.load(path)
+        Logger(session).note(message)
+        typer.echo("[LOG]📝 Note recorded.")
+    else:
+        # TODO: Find better way to handle unactive session
+        # to avoid repetitive logs like the one below from
+        # start, note, stop, etc
+        typer.echo("[DEVLOG] No current session active.")
 
 
 @app.command()
@@ -40,12 +53,15 @@ def stop() -> None:
     """
     Stop an active session.
     """
-    path = Path(CURRENT.read_text())
-    session = Session.load(path)
-    session.stop()
-    session.save()
-    CURRENT.unlink()
-    typer.echo("✅ Session ended.")
+    if CURRENT.exists():
+        path = Path(CURRENT.read_text())
+        session = Session.load(path)
+        session.stop()
+        session.save()
+        CURRENT.unlink()
+        typer.echo("[DEVLOG] ✅ Session ended.")
+    else:
+        typer.echo("[DEVLOG] No current session active.")
 
 
 @app.command()
@@ -58,11 +74,27 @@ def export(format: str) -> None:
     """
     # TODO: Find a better way to export files
     today_file = DATA_DIR / f"{datetime.now().strftime('%Y-%m-%d')}.json"
-    session = Session.load(Path(today_file))
-    session.save()
-    if format == "md":
-        session.export_markdown()
-        typer.echo(f"🚀 Log exported to {session.md_path}")
+    session = Export(today_file)
+    if CURRENT.exists():
+        typer.echo("[DEVLOG] Session active. Stop it before exporting.")
+    else:
+        if format == "md":
+            session.export_markdown()
+            typer.echo(f"[LOG] 🚀 Log exported to {session.md_path}")
+
+        if format == "html":
+            session.export_html(Path("devlog/dashboard/index.html"),)
+            typer.echo(f"[LOG] ✅ Data moved to HTML: {session.html_path}")
+
+
+@app.command()
+def dashboard():
+    html_path = Path(DATA_DIR / "index.html")
+    if html_path.exists():
+        webbrowser.open(html_path.as_uri())
+        typer.echo(f"[DEVLOG] Dashboard opened from {html_path}")
+    else:
+        typer.echo(f"{html_path} does not exists.")
 
 
 if __name__ == "__main__":
