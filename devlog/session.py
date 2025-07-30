@@ -25,8 +25,8 @@ class Session:
     def __init__(self, session_id: str, base_dir: Path) -> None:
         self.id = session_id
         self.base_dir = base_dir
-        self.json_path = base_dir / f"{datetime.now().strftime("%Y-%m-%d")}.json"
-        self.md_path = self.json_path.with_suffix(".md")
+        self.json_path = base_dir / \
+            f"{datetime.now().strftime("%Y-%m-%d")}.json"
         self.data: SessionData = {
             "id": session_id,
             "start_time": datetime.now().isoformat(timespec="seconds"),
@@ -36,7 +36,9 @@ class Session:
 
     @classmethod
     def start_new(cls, base_dir: Path) -> "Session":
-        session_id = datetime.now().strftime("%H-%M-%S")
+        session_id = str(len(json.load(
+            open(base_dir / f"{datetime.now().strftime("%Y-%m-%d")}.json")
+        )))
         session = cls(session_id, base_dir)
         session.save()
         return session
@@ -85,33 +87,3 @@ class Session:
 
         with open(today_file, "w") as f:
             json.dump(sessions, f, indent=2)
-
-    def export_markdown(self) -> None:
-        with open(self.json_path, "r") as f:
-            sessions = json.load(f)
-
-        for data in sessions:
-            if "log" in data:
-                lines = [
-                    f"# DevLog — {data['log']}\n"
-                ]
-            else:
-                # TODO: Find a better way to handle
-                # start_log and stop_log. This is
-                # too ugly.
-                start_log = data.get('start_time')
-                lines = [
-                    f"## Session Log — {data.get("id")}",
-                    f"\U0001F4C1 **CWD**: {data.get('cwd')}",
-                    f"\U0001F551 **Start**: {start_log[start_log.find("T")+1:]}",
-                ]
-
-                for event in data.get("events"):
-                    time = event["timestamp"].split("T")[1]
-                    lines.append(f"- \U0001F4DD {time}: {event['message']}")
-
-                if "stop_time" in data:
-                    stop_log = data.get('stop_time')
-                    lines.append(f"\U0001F6D1 **Stop**: {stop_log[stop_log.find("T")+1:]}\n---\n")
-            with open(self.md_path, "a") as f:
-                f.write("\n".join(lines))
