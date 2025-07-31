@@ -1,6 +1,7 @@
 from datetime import datetime
 from bs4 import BeautifulSoup
 from pathlib import Path
+from typing import Optional
 
 import json
 import os
@@ -41,7 +42,7 @@ class Export:
         lines = [
             f"## Session Log — {data.get('id')}",
             f"\U0001F4C1 **CWD**: {data.get('cwd', 'N/A')}",
-            f"\U0001F551 **Start**: {self._format_time(data.get('start_time'))}",
+            f"\U0001F551 **Start**: {self._format_time(data['start_time'])}",
         ]
 
         for event in data.get("events", []):
@@ -49,13 +50,17 @@ class Export:
             lines.append(f"- \U0001F4DD {time}: {event.get('message', '')}")
 
         if stop := data.get("stop_time"):
-            lines.append(f"\U0001F6D1 **Stop**: {self._format_time(stop)}\n---\n")
+            lines.append(
+                f"\U0001F6D1 **Stop**: {self._format_time(stop)}\n---\n"
+            )
 
         return lines
 
-    def _format_time(self, ts: str) -> str:
-        return datetime.fromisoformat(ts).strftime("%H:%M:%S") \
-             if ts else "Unknown"
+    def _format_time(self, timestamp: Optional[str]) -> str:
+        if timestamp is None:
+            return "Unknown"
+        else:
+            return datetime.fromisoformat(timestamp).strftime("%H:%M:%S")
 
     def _fetch_json_files(self):
         """
@@ -142,7 +147,7 @@ class Export:
         files = self._fetch_json_files()
         for file in files:
             with open(template_file, "r", encoding="utf-8") as tpl:
-                soup = BeautifulSoup(tpl, "html.parser")
+                soup: BeautifulSoup = BeautifulSoup(tpl, "html.parser")
 
             self._build_sidebar(soup, files)
 
@@ -155,7 +160,8 @@ class Export:
             output_html = Path(self.dash_dir / file).with_suffix(".html")
 
             with open(output_html, "w", encoding="utf-8") as out:
-                out.write(soup.prettify())
+                html_content: str = str(soup.prettify())
+                out.write(html_content)
 
         latest_html = Path(self.dash_dir / files[0]).with_suffix(".html")
         shutil.copy(latest_html, (self.dash_dir) / "index.html")
