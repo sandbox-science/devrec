@@ -36,9 +36,12 @@ class Session:
 
     @classmethod
     def start_new(cls, base_dir: Path) -> "Session":
-        session_id = str(len(json.load(
-            open(base_dir / f"{datetime.now().strftime("%Y-%m-%d")}.json")
-        )))
+        today_file = base_dir / f"{datetime.now().strftime("%Y-%m-%d")}.json"
+        if today_file.exists():
+            with open(today_file, "r") as f:
+                session_id = str(len(json.load(f)))
+        else:
+            session_id = "1"
         session = cls(session_id, base_dir)
         session.save()
         return session
