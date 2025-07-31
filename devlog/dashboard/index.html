@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>DevLog Dashboard</title>
+      <style>
+            :root {
+                  --bg-color: #0f172a;
+                  --sidebar-bg: #1e293b;
+                  --card-bg: #1e293b;
+                  --text-color: #e2e8f0;
+                  --accent-color: #38bdf8;
+                  --hover-bg: #334155;
+            }
+
+            body.light-mode {
+                  --bg-color: #f1f5f9;
+                  --sidebar-bg: #ffffff;
+                  --card-bg: #ffffff;
+                  --text-color: #1e293b;
+                  --accent-color: #2563eb;
+                  --hover-bg: #e2e8f0;
+            }
+
+            body {
+                  font-family: 'Open Sans', Oxygen, Roboto, Arial, sans-serif;
+                  line-height: 1.6;
+                  font-size: 16px;
+                  background-color: var(--bg-color);
+                  color: var(--text-color);
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  height: 100vh;
+            }
+
+            /* Top Navbar */
+            .navbar {
+                  background: linear-gradient(90deg, var(--sidebar-bg), var(--hover-bg));
+                  display: flex;
+                  justify-content: center ;
+                  align-items: center;
+                  padding: 10px 20px;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+
+            .navbar .logo {
+                  font-size: 1.7rem;
+                  font-weight: bold;
+                  color: var(--accent-color);
+                  margin-right: 8px;
+            }
+
+            .toggle-mode {
+                  cursor: pointer;
+                  background-color: transparent;
+                  border: none;
+                  color: var(--accent-color);
+                  font-size: 1.2rem;
+            }
+
+            /* Main Layout */
+            main {
+                  flex: 1;
+                  display: flex;
+                  max-width: 1400px;
+                  margin: 20px auto;
+                  width: 100%;
+                  overflow: hidden;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                  width: 240px;
+                  background-color: var(--sidebar-bg);
+                  padding: 20px;
+                  border-right: 1px solid var(--hover-bg);
+                  overflow-y: auto;
+                  flex-shrink: 0;
+                  display: flex;
+                  flex-direction: column;
+                  border-radius: 10px;
+            }
+
+            .sidebar h3 {
+                  color: var(--accent-color);
+                  text-align: center;
+                  margin-bottom: 20px;
+            }
+
+            .sidebar ul {
+                  list-style: none;
+                  padding: 0;
+            }
+
+            .sidebar li {
+                  padding: 12px;
+                  cursor: pointer;
+                  border-radius: 8px;
+                  margin-bottom: 10px;
+                  transition: background 0.3s;
+            }
+
+            .sidebar li:hover,
+            .sidebar li.active {
+                  background-color: var(--hover-bg);
+                  color: var(--accent-color);
+            }
+
+            .sidebar a {
+                  color: inherit;
+                  text-decoration: none;
+                  display: block;
+                  font-weight: 500;
+            }
+
+            /* Main content */
+            #articles {
+                  flex: 1;
+                  padding-left: 20px;
+                  padding-right: 20px;
+                  overflow-y: auto;
+            }
+
+            article {
+                  background-color: var(--card-bg);
+                  border-radius: 12px;
+                  padding: 24px;
+                  margin-bottom: 24px;
+                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                  transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            article:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            }
+
+            article h3,
+            article h4 {
+                  margin-top: 0;
+                  color: var(--accent-color);
+            }
+
+            article p {
+                  background-color: var(--bg-color);
+                  padding: 10px;
+                  border-left: 4px solid var(--accent-color);
+                  font-size: 0.95rem;
+                  border-radius: 5px;
+            }
+
+            ul.events {
+                  list-style: none;
+                  padding-left: 0;
+                  margin-top: 15px;
+            }
+
+            li {
+                  background: var(--bg-color);
+                  padding: 10px;
+                  border-radius: 10px;
+                  margin-bottom: 8px;
+                  border: 1px solid var(--hover-bg);
+                  font-size: 0.95rem;
+                  display: block;
+            }
+
+            li span.time {
+                  font-weight: bold;
+                  color: #fbbf24;
+                  min-width: 80px;
+            }
+
+            footer {
+                  font-size: 0.85rem;
+                  text-align: center;
+                  padding: 10px;
+                  background: var(--sidebar-bg);
+                  color: var(--text-color);
+                  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
+            }
+      </style>
+</head>
+
+<body>
+      <header class="navbar">
+            <div class="logo">📝 DevLog Dashboard</div>
+            <button class="toggle-mode" onclick="toggleMode()">🌙</button>
+      </header>
+
+      <!-- WARNING: DO NOT EDIT THE MAIN CONTENT.
+            PYTHON WILL AUTO-GENERATE THE SIDEBAR AND ARTICLES THERE -->
+      <main>
+            <aside id="sidebar" class="sidebar">
+                  <!-- Python will generate links here -->
+            </aside>
+            <section id="articles">
+                  <!-- Python will generate content here -->
+            </section>
+      </main>
+
+      <footer>
+            © 2025 DevLog – Built with ❤️ for developers
+      </footer>
+
+      <script>
+            function toggleMode() {
+                  document.body.classList.toggle('light-mode');
+                  const button = document.querySelector('.toggle-mode');
+                  button.textContent = document.body.classList.contains('light-mode') ? '🌞' : '🌙';
+            }
+      </script>
+</body>
+
+</html>
