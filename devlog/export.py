@@ -62,18 +62,20 @@ class Export:
         else:
             return datetime.fromisoformat(timestamp).strftime("%H:%M:%S")
 
-    def _fetch_json_files(self):
+    def _fetch_json_files(self) -> list:
         """
         Fetch all JSON files in `/.devlog/sessions/` directory.
+
+        :return: List of JSON files.
         """
         path_to_json = self.json_path
-        json_files = [
+        json_files: list = [
             pos_json for pos_json in os.listdir(path_to_json)
             if pos_json.endswith('.json')
         ]
         return sorted(json_files, reverse=True)
 
-    def _build_sidebar(self, soup, files):
+    def _build_sidebar(self, soup, files: list) -> None:
         sidebar_section = soup.find("aside", id="sidebar")
         h3 = soup.new_tag("h3")
         h3.string = "Logs"
@@ -88,7 +90,7 @@ class Export:
             ul.append(li)
         sidebar_section.append(ul)
 
-    def _add_articles(self, soup, articles):
+    def _add_articles(self, soup, articles: list) -> None:
         articles_section = soup.find("section", id="articles")
         for entry in articles:
             new_article = soup.new_tag("article")
@@ -137,7 +139,7 @@ class Export:
 
             articles_section.append(new_article)
 
-    def export_html(self, template_file: Path):
+    def export_html(self, template_file: Path) -> None:
         """
         Export JSON log to a styled HTML.
 

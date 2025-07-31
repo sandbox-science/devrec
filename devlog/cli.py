@@ -23,7 +23,7 @@ def start() -> None:
     if CURRENT.exists():
         typer.echo("[DEVLOG] session already in progress.")
     else:
-        session = Session.start_new(DATA_DIR)
+        session: Session = Session.start_new(DATA_DIR)
         CURRENT.write_text(str(session.json_path))
         typer.echo(f"[DEVLOG] ✅ Session started: {session.id}")
 
@@ -38,7 +38,7 @@ def note(message: str) -> None:
     """
     if CURRENT.exists():
         path = Path(CURRENT.read_text())
-        session = Session.load(path)
+        session: Session = Session.load(path)
         Logger(session).note(message)
         typer.echo("[LOG]📝 Note recorded.")
     else:
@@ -55,7 +55,7 @@ def stop() -> None:
     """
     if CURRENT.exists():
         path = Path(CURRENT.read_text())
-        session = Session.load(path)
+        session: Session = Session.load(path)
         session.stop()
         session.save()
         CURRENT.unlink()
@@ -72,7 +72,7 @@ def export(format: str) -> None:
     :param format: The format the user want to export the logs.
     :type format: str
     """
-    session = Export(DASH_DIR)
+    session: Export = Export(DASH_DIR)
     if CURRENT.exists():
         typer.echo("[DEVLOG] Session active. Stop it before exporting.")
     else:
