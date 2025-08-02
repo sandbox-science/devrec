@@ -29,7 +29,7 @@ dev = [
 ]
 
 [project.scripts]
-devlog = "devlog.main:app"
+devlog = "devlog.main:init"
 
 [tool.setuptools.packages.find]
 where = ["."]
