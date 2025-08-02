@@ -1,16 +1,9 @@
-from .cli import app, start, stop, note, export, dashboard, CURRENT
+from .cli import start, stop, note, export, dashboard, CURRENT
 
 import cmd
 import os
 
-
-@app.command()
-def init():
-    BLUE = "\033[1;34m"
-    RESET = "\033[0m"
-
-    class DevLogShell(cmd.Cmd):
-        intro = """
+BANNER = """
     ░████    ░███████                         ░██                                  ░████ 
     ░██      ░██   ░██                        ░██                                    ░██ 
     ░██      ░██    ░██  ░███████  ░██    ░██ ░██          ░███████   ░████████      ░██ 
@@ -20,55 +13,64 @@ def init():
     ░██      ░███████    ░███████     ░███    ░██████████  ░███████   ░█████░██      ░██ 
     ░██                                                                     ░██      ░██ 
     ░████                                                             ░███████     ░████ 
+"""
 
-                Welcome to DevLog Shell. Type help or ? to list commands.\n
+BLUE = "\033[1;34m"
+RESET = "\033[0m"
+
+
+class DevLogShell(cmd.Cmd):
+    intro = f"{BANNER}\n\t\tWelcome to DevLog Shell." \
+            "Type help or ? to list commands.\n"
+    prompt = f"{BLUE}devlog >{RESET} "
+
+    def do_start(self, args):
+        """Start a new session."""
+        start()
+
+    def do_note(self, arg):
+        """Add a note: note your message."""
+        note(arg)
+
+    def do_stop(self, arg):
+        """Stop session."""
+        stop()
+
+    def do_export(self, arg):
         """
-        prompt = f"{BLUE}devlog >{RESET} "
+        Export logs to markdwon, html, etc.
 
-        def do_start(self, args):
-            """Start a new session."""
-            start()
+        :param format: The format the user want to export the logs.
+        :type format: str
+        """
+        export(arg)
 
-        def do_note(self, arg):
-            """Add a note: note your message."""
-            note(arg)
+    def do_dashboard(self, arg):
+        """
+        Open the dashboard for the logs.
 
-        def do_stop(self, arg):
-            """Stop session."""
-            stop()
+        Required to have run `export html` prior.
+        """
+        dashboard()
 
-        def do_export(self, arg):
-            """
-            Export logs to markdwon, html, etc.
+    def emptyline(self):
+        """Ignore when an empty line is entered by the user."""
+        pass
 
-            :param format: The format the user want to export the logs.
-            :type format: str
-            """
-            export(arg)
+    def default(self, line):
+        """Run any unknown command in the system shell."""
+        os.system(line)
 
-        def do_dashboard(self, arg):
-            """
-            Open the dashboard for the logs.
+    def do_exit(self, arg):
+        """Exit the DevLog shell."""
+        if CURRENT.exists():
+            print("\n[DEVLOG] session still in"
+                  "progress. Type `stop` first. \n")
+        else:
+            print("\nGood work on today's session.\nCome again!\n")
+            return True
 
-            Required to have run `export html` prior.
-            """
-            dashboard()
 
-        def emptyline(self):
-            """Ignore when an empty line is entered by the user."""
-            pass
-
-        def default(self, line):
-            """Run any unknown command in the system shell."""
-            os.system(line)
-
-        def do_exit(self, arg):
-            """Exit the DevLog shell."""
-            if CURRENT.exists():
-                print("\n[DEVLOG] session still in"
-                      "progress. Type `stop` first.\n")
-            else:
-                print("\nGood work on today's session.\nCome again!\n")
-                return True
-
+def init():
+    """Entry point of the app. Initialize DevLog Shell."""
     DevLogShell().cmdloop()
