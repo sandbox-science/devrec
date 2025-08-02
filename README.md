@@ -1,6 +1,6 @@
 # DevLog Python Prototype
 
-**DevLog** is a lightweight CLI tool that records your local developer workflow. It captures notes, shell activity, and optionally Git actions to produce a structured, timestamped report, perfect for debugging, documentation, or reflection.
+**DevLog** is a lightweight CLI tool that records your local developer workflow. It captures notes, shell activity, and Git actions to produce a structured, timestamped report, perfect for debugging, documentation, or reflection.
 
 > [!NOTE]
 >
@@ -10,7 +10,7 @@
 
 ## Features
 
-- 📋 Start and stop coding sessions
+- 📋 Start and stop sessions
 - 📝 Add timestamped notes during a session
 - 📂 Export sessions as Markdown logs
 - 📁 Organized logs stored in `~/.devlog/sessions/`
@@ -35,21 +35,27 @@ pip install -e ".[dev]"
 ## Usage
 
 ```bash
+# Enter DevLog shell mode
+devlog init
+
 # Start a session
-devlog start
+start
 
 # Add a note
-devlog note "Working on Sandbox Science Project"
+note Working on Sandbox Science Project
 
 # End the session and export to Markdown
-devlog stop
+stop
 
 # Export your logs into markdown or HTML
-devlog export md
-devlog export html
+export md
+export html
 
 # Open a dashboard to display your logs
-devlog dashboard
+dashboard
+
+# Exit DevLog shell mode
+exit
 ```
 
 All session are saved in `~/.devlog/sessions/{timestamp}.json` and `.md`
