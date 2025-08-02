@@ -69,9 +69,9 @@ dashboard
 exit
 ```
 
-All **JSON** session are saved in `~/.devlog/sessions/{timestamp}.json`
-All exported **HTML** sessions are saved in `~/.devlog/sessions/dashboard/index.html`
-All exported **Markdown** sessions are saved in `~/.devlog/sessions/{timestamp}.md`
+- All **JSON** session are saved in `~/.devlog/sessions/{timestamp}.json`
+- All exported **HTML** sessions are saved in `~/.devlog/sessions/dashboard/index.html`
+- All exported **Markdown** sessions are saved in `~/.devlog/sessions/{timestamp}.md`
 
 ## Engineering Requirement Document
 
