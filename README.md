@@ -46,8 +46,8 @@ pip install -e ".[dev]"
 ## Usage
 
 ```bash
-# Enter DevLog shell mode
-devlog init
+# Initialize DevLog shell mode
+devlog
 
 # Start a session
 start
