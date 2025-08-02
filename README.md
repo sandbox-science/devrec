@@ -1,6 +1,16 @@
-# DevLog Python Prototype
-
-**DevLog** is a lightweight CLI tool that records your local developer workflow. It captures notes, shell activity, and Git actions to produce a structured, timestamped report, perfect for debugging, documentation, or reflection.
+```
+░████░███████                      ░██                          ░████ 
+░██  ░██   ░██                     ░██                            ░██ 
+░██  ░██    ░██ ░███████ ░██    ░██░██        ░███████  ░████████ ░██ 
+░██  ░██    ░██░██    ░██░██    ░██░██       ░██    ░██░██    ░██ ░██ 
+░██  ░██    ░██░█████████ ░██  ░██ ░██       ░██    ░██░██    ░██ ░██ 
+░██  ░██   ░██ ░██         ░██░██  ░██       ░██    ░██░██   ░███ ░██ 
+░██  ░███████   ░███████    ░███   ░██████████░███████  ░█████░██ ░██ 
+░██                                                           ░██ ░██ 
+░████                                                   ░███████░████ 
+                                                                      
+```                                                                                       
+**DevLog** is a lightweight CLI tool that records your local development workflow. It captures notes, shell activity, and Git actions to produce a structured, timestamped report, perfect for debugging, documentation, or reflection. The logs are recorded in text format via a JSON file. The tool can generate a Markdown and HTML report for developers to directly visualize their workflow offline directly from their browser.
 
 > [!NOTE]
 >
@@ -10,14 +20,15 @@
 
 ## Features
 
-- 📋 Start and stop sessions
+- 📋 Start and stop sessions via DevLog shell
 - 📝 Add timestamped notes during a session
-- 📂 Export sessions as Markdown logs
+- 🎟️ Add timestamped git activity during a session
+- 📂 Export sessions as Markdown and HTML logs
 - 📁 Organized logs stored in `~/.devlog/sessions/`
 
 ---
 
-## Installation
+## Dev Mode Installation
 
 ```bash
 # Clone the repository
@@ -28,7 +39,7 @@ cd devlog
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install in editable mode with dev dependencies
+# Install with dev dependencies
 pip install -e ".[dev]"
 ```
 
@@ -47,7 +58,7 @@ note Working on Sandbox Science Project
 # End the session and export to Markdown
 stop
 
-# Export your logs into markdown or HTML
+# Export all your logs into markdown or HTML
 export md
 export html
 
@@ -58,7 +69,9 @@ dashboard
 exit
 ```
 
-All session are saved in `~/.devlog/sessions/{timestamp}.json` and `.md`
+All **JSON** session are saved in `~/.devlog/sessions/{timestamp}.json`
+All exported **HTML** sessions are saved in `~/.devlog/sessions/dashboard/index.html`
+All exported **Markdown** sessions are saved in `~/.devlog/sessions/{timestamp}.md`
 
 ## Engineering Requirement Document
 
