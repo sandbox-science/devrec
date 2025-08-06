@@ -2,8 +2,6 @@ from .cli import start, stop, note, export, dashboard, CURRENT
 
 import cmd
 import os
-import readline
-import sys
 
 BANNER = """
     ░████    ░███████                         ░██                                  ░████
