@@ -2,17 +2,19 @@ from .cli import start, stop, note, export, dashboard, CURRENT
 
 import cmd
 import os
+import readline
+import sys
 
 BANNER = """
-    ░████    ░███████                         ░██                                  ░████ 
-    ░██      ░██   ░██                        ░██                                    ░██ 
-    ░██      ░██    ░██  ░███████  ░██    ░██ ░██          ░███████   ░████████      ░██ 
-    ░██      ░██    ░██ ░██    ░██ ░██    ░██ ░██         ░██    ░██ ░██    ░██      ░██ 
-    ░██      ░██    ░██ ░█████████  ░██  ░██  ░██         ░██    ░██ ░██    ░██      ░██ 
-    ░██      ░██   ░██  ░██          ░██░██   ░██         ░██    ░██ ░██   ░███      ░██ 
-    ░██      ░███████    ░███████     ░███    ░██████████  ░███████   ░█████░██      ░██ 
-    ░██                                                                     ░██      ░██ 
-    ░████                                                             ░███████     ░████ 
+    ░████    ░███████                         ░██                                  ░████
+    ░██      ░██   ░██                        ░██                                    ░██
+    ░██      ░██    ░██  ░███████  ░██    ░██ ░██          ░███████   ░████████      ░██
+    ░██      ░██    ░██ ░██    ░██ ░██    ░██ ░██         ░██    ░██ ░██    ░██      ░██
+    ░██      ░██    ░██ ░█████████  ░██  ░██  ░██         ░██    ░██ ░██    ░██      ░██
+    ░██      ░██   ░██  ░██          ░██░██   ░██         ░██    ░██ ░██   ░███      ░██
+    ░██      ░███████    ░███████     ░███    ░██████████  ░███████   ░█████░██      ░██
+    ░██                                                                     ░██      ░██
+    ░████                                                             ░███████     ░████
 """
 
 BLUE = "\033[1;34m"
@@ -29,7 +31,12 @@ class DevLogShell(cmd.Cmd):
         start()
 
     def do_note(self, arg):
-        """Add a note: note your message."""
+        """
+        Add a note to your log.
+
+        example:
+        > note your_message
+        """
         note(arg)
 
     def do_stop(self, arg):
@@ -59,16 +66,21 @@ class DevLogShell(cmd.Cmd):
 
     def default(self, line):
         """Run any unknown command in the system shell."""
-        os.system(line)
+        if not line.strip():
+            print()
+            return
+        try:
+            os.system(line)
+        except Exception as e:
+            print(f"[DEVLOG] Error running command: {e}")
 
     def do_exit(self, arg):
         """Exit the DevLog shell."""
-        if CURRENT.exists():
-            print("\n[DEVLOG] session still in"
-                  "progress. Type `stop` first. \n")
-        else:
+        if not CURRENT.exists():
             print("\nGood work on today's session.\nCome again!\n")
             return True
+
+        print("\n[DEVLOG] session still in progress. Type `stop` first. \n")
 
 
 def init():
