@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DevLog Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">📝 DevLog Dashboard</div>
+    <button class="toggle-mode" aria-label="Toggle light/dark mode" onclick="toggleMode()">🌙</button>
+  </header>
+
+  <main>
+    <aside id="sidebar" class="sidebar" role="navigation" aria-label="Sidebar navigation">
+      <!-- Python will generate links here -->
+    </aside>
+    <section id="articles" class="content" tabindex="0">
+      <!-- Python will generate content here -->
+    </section>
+  </main>
+
+  <footer>
+    © 2025 DevLog – Built with ❤️ for developers
+  </footer>
+
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle('light-mode');
+      const button = document.querySelector('.toggle-mode');
+      button.textContent = document.body.classList.contains('light-mode') ? '🌞' : '🌙';
+    }
+  </script>
+</body>
+
+</html>
