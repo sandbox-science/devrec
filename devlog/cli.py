@@ -28,12 +28,12 @@ def start() -> None:
 
     typer.echo(f"[DEVLOG] ✅ Session {session.id} started.")
 
-    commit_thread = Thread(target=worker, daemon=True)
+    commit_thread = Thread(target=git_worker, daemon=True)
     commit_thread.start()
 
 
-def worker():
-    """Background worker that keeps listeners alive."""
+def git_worker():
+    """Background git worker that keeps listeners alive."""
     session = Session.load(Path(CURRENT.read_text()))
     logger = Logger(session)
     logger.git()
@@ -69,6 +69,7 @@ def stop() -> None:
 
     path = Path(CURRENT.read_text())
     session: Session = Session.load(path)
+    Logger(session).stop_signal = True
     session.stop()
     session.save()
     CURRENT.unlink()
