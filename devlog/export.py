@@ -167,3 +167,9 @@ class Export:
 
         latest_html = Path(self.dash_dir / files[0]).with_suffix(".html")
         shutil.copy(latest_html, (self.dash_dir) / "index.html")
+
+        style_file = Path("devlog/dashboard/styles.css")
+        shutil.copy(style_file, (self.dash_dir) / "styles.css")
+
+        js_file = Path("devlog/dashboard/toggle-mode.js")
+        shutil.copy(js_file, (self.dash_dir) / "toggle-mode.js")
