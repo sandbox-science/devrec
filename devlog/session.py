@@ -49,6 +49,11 @@ class Session:
         session.save()
         return session
 
+    # This function is note used nor necessary no more
+    # It is kept here in case we want to continue a session
+    # that has not been finished (not sure if we will yet)
+    # I just leave it here for now.
+    # TODO: decide what to do with this
     @classmethod
     def load(cls, path: Path) -> "Session":
         with open(path, "r") as f:
