@@ -1,7 +1,8 @@
-from .cli import start, stop, note, export, dashboard, CURRENT
+from .cli import start, stop, note, export, dashboard, CURRENT, status
 
 import cmd
 import os
+import signal
 
 BANNER = """
     ░████    ░███████                         ░██                                  ░████
@@ -58,6 +59,12 @@ class DevLogShell(cmd.Cmd):
         """
         dashboard()
 
+    def do_status(self, arg):
+        """
+        Display current session status.
+        """
+        status()
+
     def emptyline(self):
         """Ignore when an empty line is entered by the user."""
         pass
@@ -81,6 +88,18 @@ class DevLogShell(cmd.Cmd):
         print("\n[DEVLOG] session still in progress. Type `stop` first. \n")
 
 
+def _handle_signal(_sig, _frame):
+    # shutdown on Ctrl-C / SIGTERM
+    try:
+        if CURRENT.exists():
+            print("\n[DEVLOG] Caught interrupt. Stopping session...")
+            stop()
+    finally:
+        raise SystemExit(130)
+
+
 def init():
     """Entry point of the app. Initialize DevLog Shell."""
+    signal.signal(signal.SIGINT, _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
     DevLogShell().cmdloop()
