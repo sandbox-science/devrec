@@ -4,7 +4,6 @@ from threading import Lock, Event
 from typing import Optional, Set
 
 import subprocess
-import time
 
 # mutex to avoid race condition when adding
 # a new event between auto detected activites
@@ -126,8 +125,3 @@ class Logger:
 
             except Exception:
                 pass
-
-            # for _ in range(10):
-            #     if self.stopped():
-            #         break
-            #     time.sleep(10)
