@@ -16,6 +16,9 @@ CURRENT = DATA_DIR.parent / "current.json"
 DASH_DIR = DATA_DIR / "dashboard"
 
 
+SESSION = None
+
+
 @app.command()
 def start() -> None:
     """Start a new session."""
@@ -23,19 +26,21 @@ def start() -> None:
         typer.echo("[DEVLOG] session already in progress.")
         return
 
-    session: Session = Session.start_new(DATA_DIR)
-    CURRENT.write_text(str(session.json_path))
+    global SESSION
+    SESSION = Session.start_new(DATA_DIR)
+    CURRENT.write_text(str(SESSION.json_path))
 
-    typer.echo(f"[DEVLOG] ✅ Session {session.id} started.")
-
-    commit_thread = Thread(target=git_worker, daemon=True)
-    commit_thread.start()
+    typer.echo(f"[DEVLOG] ✅ Session {SESSION.id} started.")
+    
+    SESSION = SESSION.load(Path(CURRENT.read_text()))
+    git_thread = Thread(target=git_worker, daemon=True)
+    git_thread.start()
 
 
 def git_worker():
     """Background git worker that keeps listeners alive."""
-    session = Session.load(Path(CURRENT.read_text()))
-    logger = Logger(session)
+    #session = SESSION.load(Path(CURRENT.read_text()))
+    logger = Logger(SESSION)
     logger.git()
 
 
@@ -54,9 +59,9 @@ def note(message: str) -> None:
         typer.echo("[DEVLOG] No current session active.")
         return
 
-    path = Path(CURRENT.read_text())
-    session: Session = Session.load(path)
-    Logger(session).note(message)
+    #path = Path(CURRENT.read_text())
+    #session = SESSION.load(Path(CURRENT.read_text())
+    Logger(SESSION).note(message)
     typer.echo("[LOG]📝 Note recorded.")
 
 
