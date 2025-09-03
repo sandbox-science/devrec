@@ -1,6 +1,7 @@
 from .session import Session
 
-from threading import Lock
+from threading import Lock, Event
+from typing import Optional, Set
 
 import subprocess
 import time
@@ -10,96 +11,123 @@ import time
 # and manually added events (notes)
 SESSION_MUTEX = Lock()
 
-class Logger:
-    def __init__(self, session: Session):
-        self.session: Session = session
-        self.stop_signal = False
 
-    def log_activity(self, activity_type: str, message: str) -> None:
+class Logger:
+    def __init__(self, session: Session, stop_event: Optional[Event]):
+        self.session: Session = session
+        self._stop_event = stop_event or Event()
+
+    def stop(self) -> None:
+        self._stop_event.set()
+
+    def stopped(self) -> bool:
+        return self._stop_event.is_set()
+
+    def log_activity(self, event_type: str, message: str) -> None:
         """
         Log session activities.
 
-        :param activity_type: The type of the log.
-        :type activity_type: str
-        :param message: The message to log into the log.
+        :param event_type: The type of the event to log.
+        :type event_type: str
+        :param message: The message to log into the logger.
         :type message: str
         """
         with SESSION_MUTEX:
-            self.session.add_event(activity_type, message)
+            self.session.add_event(event_type, message)
             self.session.save()
 
-    def _get_current_commit(self):
+    def _get_current_commit(self) -> str:
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"]
         ).strip().decode("utf-8")
 
-    def _get_staged_files(self):
+    def _get_staged_files(self) -> Set[str]:
         output = subprocess.check_output(
             ["git", "diff", "--cached", "--name-only"]
         ).strip().decode()
         return set(output.splitlines()) if output else set()
 
-    def _get_unstaged_files(self):
+    def _get_unstaged_files(self) -> Set[str]:
         output = subprocess.check_output(
             ["git", "diff", "--name-only"]
         ).strip().decode()
         return set(output.splitlines()) if output else set()
 
-    def _get_current_branch(self):
+    def _get_current_branch(self) -> str:
         return subprocess.check_output(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"]
         ).strip().decode()
 
     def git(self):
-        """Log git activities."""
-        current_commit = self._get_current_commit()
-        staged_files = self._get_staged_files()
-        unstaged_files = self._get_unstaged_files()
-        current_branch = self._get_current_branch()
+        """Background loop to log git activities."""
+        try:
+            current_commit = self._get_current_commit()
+            staged_files = self._get_staged_files()
+            unstaged_files = self._get_unstaged_files()
+            current_branch = self._get_current_branch()
+        except subprocess.CalledProcessError:
+            # Disable git loggin if not a repo.
+            return
 
-        while not self.stop_signal:
+        while not self.stopped():
             try:
                 # Detect new commits
-                new_commit = self._get_current_commit()
-                if new_commit != current_commit:
-                    result = subprocess.run(
-                        ["git", "log", "-1", "--pretty=oneline"],
-                        capture_output=True,
-                        text=True
-                    )
-                    commit_msg = result.stdout.strip()
-                    self.log_activity("git", f"New commit: {commit_msg}")
-                    current_commit = new_commit
+                try:
+                    new_commit = self._get_current_commit()
+                    if new_commit != current_commit:
+                        result = subprocess.run(
+                            ["git", "log", "-1", "--pretty=oneline"],
+                            capture_output=True,
+                            text=True,
+                            check=False,
+                        )
+                        commit_msg = result.stdout.strip()
+                        self.log_activity("git", f"New commit: {commit_msg}")
+                        current_commit = new_commit
+                except subprocess.CalledProcessError:
+                    return
 
                 # Detect new staged files
-                new_staged = self._get_staged_files()
-                if new_staged != staged_files:
-                    diff_added = new_staged - staged_files
-                    if diff_added:
-                        self.log_activity(
-                            "git", f"Staged files: {', '.join(diff_added)}"
-                        )
-                    staged_files = new_staged
+                try:
+                    new_staged = self._get_staged_files()
+                    if new_staged != staged_files:
+                        diff_added = new_staged - staged_files
+                        if diff_added:
+                            self.log_activity(
+                                "git", f"Staged files: {', '.join(diff_added)}"
+                            )
+                        staged_files = new_staged
+                except subprocess.CalledProcessError:
+                    return
 
                 # Detect new unstaged changes
-                new_unstaged = self._get_unstaged_files()
-                if new_unstaged != unstaged_files:
-                    diff_added = new_unstaged - unstaged_files
-                    if diff_added:
-                        self.log_activity(
-                            "git", f"Unstaged files: {', '.join(diff_added)}"
-                        )
-                    unstaged_files = new_unstaged
+                try:
+                    new_unstaged = self._get_unstaged_files()
+                    if new_unstaged != unstaged_files:
+                        diff_added = new_unstaged - unstaged_files
+                        if diff_added:
+                            self.log_activity(
+                                "git", f"Unstaged files: {', '.join(diff_added)}"
+                            )
+                        unstaged_files = new_unstaged
+                except subprocess.CalledProcessError:
+                    return
 
                 # Detect branch switches
-                new_branch = self._get_current_branch()
-                if new_branch != current_branch:
-                    self.log_activity(
-                        "git", f"Switched to branch: {new_branch}"
-                    )
-                    current_branch = new_branch
+                try:
+                    new_branch = self._get_current_branch()
+                    if new_branch != current_branch:
+                        self.log_activity(
+                            "git", f"Switched to branch: {new_branch}"
+                        )
+                        current_branch = new_branch
+                except subprocess.CalledProcessError:
+                    return
 
-            except subprocess.CalledProcessError:
+            except Exception:
                 pass
 
-            time.sleep(10)
+            # for _ in range(10):
+            #     if self.stopped():
+            #         break
+            #     time.sleep(10)
