@@ -16,7 +16,6 @@ DATA_DIR = Path.home() / ".devlog" / "sessions"
 CURRENT = DATA_DIR.parent / "current.json"
 DASH_DIR = DATA_DIR / "dashboard"
 
-
 SESSION: Optional[Session] = None
 GIT_THREAD: Optional[Thread] = None
 LOGGER: Optional[Logger] = None
@@ -107,19 +106,19 @@ def export(format: str) -> None:
     :param format: The format the user want to export the logs.
     :type format: str
     """
-    session: Export = Export(DASH_DIR)
     if CURRENT.exists():
         typer.echo("[DEVLOG] Session active. Stop it before exporting.")
         return
 
-    fmt = format.strip().lower()
+    event: Export = Export(DASH_DIR)
+    fmt: str = format.strip().lower()
     if fmt == "md":
-        session.export_markdown()
+        event.export_markdown()
         typer.echo(f"[LOG] 🚀 Logs exported to {DASH_DIR.parent}")
         return
 
     if fmt == "html":
-        session.export_html(Path("devlog/dashboard/index.html"),)
+        event.export_html(Path("devlog/dashboard/index.html"),)
         typer.echo(f"[LOG] ✅ Data moved to HTML: {DASH_DIR}")
         return
 
