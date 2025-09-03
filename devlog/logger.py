@@ -1,23 +1,32 @@
 from .session import Session
 
+from threading import Lock
+
 import subprocess
 import time
 
+# mutex to avoid race condition when adding
+# a new event between auto detected activites
+# and manually added events (notes)
+SESSION_MUTEX = Lock()
 
 class Logger:
     def __init__(self, session: Session):
         self.session: Session = session
         self.stop_signal = False
 
-    def note(self, message: str):
+    def log_activity(self, activity_type: str, message: str) -> None:
         """
-        Log a note.
+        Log session activities.
 
-        :param message: The note the user wants to log.
-        :type message str:
+        :param activity_type: The type of the log.
+        :type activity_type: str
+        :param message: The message to log into the log.
+        :type message: str
         """
-        self.session.add_event("note", message)
-        self.session.save()
+        with SESSION_MUTEX:
+            self.session.add_event(activity_type, message)
+            self.session.save()
 
     def _get_current_commit(self):
         return subprocess.check_output(
@@ -59,8 +68,7 @@ class Logger:
                         text=True
                     )
                     commit_msg = result.stdout.strip()
-                    self.session.add_event("git", f"New commit: {commit_msg}")
-                    self.session.save()
+                    self.log_activity("git", f"New commit: {commit_msg}")
                     current_commit = new_commit
 
                 # Detect new staged files
@@ -68,10 +76,9 @@ class Logger:
                 if new_staged != staged_files:
                     diff_added = new_staged - staged_files
                     if diff_added:
-                        self.session.add_event(
+                        self.log_activity(
                             "git", f"Staged files: {', '.join(diff_added)}"
                         )
-                        self.session.save()
                     staged_files = new_staged
 
                 # Detect new unstaged changes
@@ -79,19 +86,17 @@ class Logger:
                 if new_unstaged != unstaged_files:
                     diff_added = new_unstaged - unstaged_files
                     if diff_added:
-                        self.session.add_event(
+                        self.log_activity(
                             "git", f"Unstaged files: {', '.join(diff_added)}"
                         )
-                        self.session.save()
                     unstaged_files = new_unstaged
 
                 # Detect branch switches
                 new_branch = self._get_current_branch()
                 if new_branch != current_branch:
-                    self.session.add_event(
+                    self.log_activity(
                         "git", f"Switched to branch: {new_branch}"
                     )
-                    self.session.save()
                     current_branch = new_branch
 
             except subprocess.CalledProcessError:
