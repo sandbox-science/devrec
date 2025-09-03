@@ -39,7 +39,6 @@ def start() -> None:
 
 def git_worker():
     """Background git worker that keeps listeners alive."""
-    #session = SESSION.load(Path(CURRENT.read_text()))
     logger = Logger(SESSION)
     logger.git()
 
@@ -59,9 +58,7 @@ def note(message: str) -> None:
         typer.echo("[DEVLOG] No current session active.")
         return
 
-    #path = Path(CURRENT.read_text())
-    #session = SESSION.load(Path(CURRENT.read_text())
-    Logger(SESSION).note(message)
+    Logger(SESSION).log_activity("note", message)
     typer.echo("[LOG]📝 Note recorded.")
 
 
@@ -72,11 +69,11 @@ def stop() -> None:
         typer.echo("[DEVLOG] No current session active.")
         return
 
-    path = Path(CURRENT.read_text())
-    session: Session = Session.load(path)
-    Logger(session).stop_signal = True
-    session.stop()
-    session.save()
+    #path = Path(CURRENT.read_text())
+    #session: Session = Session.load(path)
+    Logger(SESSION).stop_signal = True
+    SESSION.stop()
+    SESSION.save()
     CURRENT.unlink()
     typer.echo("[DEVLOG] ✅ Session ended.")
 
