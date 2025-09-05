@@ -39,32 +39,48 @@ class Session:
         today_file = base_dir / f"{datetime.now().strftime("%Y-%m-%d")}.json"
         if today_file.exists():
             with open(today_file, "r") as f:
-                session_id = str(len(json.load(f)))
+                sessions = json.load(f)
+            # Next id is count of existing items (excluding header)
+            count = sum(1 for it in sessions if it.get("id"))
+            session_id = str(count + 1)
         else:
             session_id = "1"
         session = cls(session_id, base_dir)
         session.save()
         return session
 
+    # This function is note used nor necessary no more
+    # It is kept here in case we want to continue a session
+    # that has not been finished (not sure if we will yet)
+    # I just leave it here for now.
+    # TODO: decide what to do with this
     @classmethod
     def load(cls, path: Path) -> "Session":
         with open(path, "r") as f:
             sessions = json.load(f)
 
+        latest = None
         for item in sessions:
-            if "id" in item and item["id"]:
-                session = cls(item["id"], path.parent)
-                session.data = item
+            if item.get("id"):
+                latest = item
+
+        if latest is None:
+            return cls("1", path.parent)
+
+        session = cls(item["id"], path.parent)
+        session.data = latest
         return session
 
     def add_event(self, event_type: str, message: str) -> None:
-        self.data["events"].append({
-            "timestamp": datetime.now().isoformat(timespec="seconds"),
-            "type": event_type,
-            # TODO: Find a better way to display the directory
-            "directory": Path(os.getcwd()).name,
-            "message": message
-        })
+        self.data.setdefault("events", []).append(
+            {
+                "timestamp": datetime.now().isoformat(timespec="seconds"),
+                "type": event_type,
+                # TODO: Find a better way to display the directory
+                "directory": Path(os.getcwd()).name,
+                "message": message
+            }
+        )
 
     def stop(self) -> None:
         self.data["stop_time"] = datetime.now().isoformat(timespec="seconds")

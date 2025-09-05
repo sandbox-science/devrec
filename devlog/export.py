@@ -168,8 +168,19 @@ class Export:
         latest_html = Path(self.dash_dir / files[0]).with_suffix(".html")
         shutil.copy(latest_html, (self.dash_dir) / "index.html")
 
-        style_file = Path("devlog/dashboard/styles.css")
-        shutil.copy(style_file, (self.dash_dir) / "styles.css")
+        self._copy_dashboard_assets(self.dash_dir)
 
-        js_file = Path("devlog/dashboard/toggle-mode.js")
-        shutil.copy(js_file, (self.dash_dir) / "toggle-mode.js")
+    def _copy_dashboard_assets(self, dest_dir: Path) -> None:
+        """
+        Copy dashboard static assets into the given destination.
+
+        :param dest_dir: The destination where to copy the assets
+        :type dest_dir: Path
+        """
+        from importlib import resources
+        from . import dashboard
+        assets = ["styles.css", "toggle-mode.js"]
+        for file in assets:
+            resource = resources.files(dashboard) / file
+            with resources.as_file(resource) as source_path:
+                shutil.copy(source_path, dest_dir / file)
