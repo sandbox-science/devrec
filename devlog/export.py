@@ -168,8 +168,12 @@ class Export:
         latest_html = Path(self.dash_dir / files[0]).with_suffix(".html")
         shutil.copy(latest_html, (self.dash_dir) / "index.html")
 
-        style_file = Path("devlog/dashboard/styles.css")
+        from importlib import resources
+        from . import dashboard
+        css_file = str(resources.files(dashboard) / "styles.css")
+        style_file = Path(css_file)
         shutil.copy(style_file, (self.dash_dir) / "styles.css")
 
-        js_file = Path("devlog/dashboard/toggle-mode.js")
+        js_res = str(resources.files(dashboard) / "toggle-mode.js")
+        js_file = Path(js_res)
         shutil.copy(js_file, (self.dash_dir) / "toggle-mode.js")

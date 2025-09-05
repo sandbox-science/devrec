@@ -118,7 +118,7 @@ def export(format: str) -> None:
         return
     from importlib import resources
     from . import dashboard
-    html_index = resources.files(dashboard) / "index.html"
+    html_index = str(resources.files(dashboard) / "index.html")
     if fmt == "html":
         #event.export_html(Path("devlog/dashboard/index.html"),)
         event.export_html(Path(html_index))
