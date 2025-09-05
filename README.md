@@ -28,6 +28,18 @@
 
 ---
 
+## User Installation
+The project is not yet available on `pip`. However, you can install it running the following:
+
+```bash
+# Set up virtual environment (optional but recommended)
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install with pip from GitHub main branch
+pip install git+ssh://git@github.com/sandbox-science/devlog.git@main
+```
+
 ## Dev Mode Installation
 
 ```bash
