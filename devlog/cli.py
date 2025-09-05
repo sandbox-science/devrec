@@ -116,9 +116,12 @@ def export(format: str) -> None:
         event.export_markdown()
         typer.echo(f"[LOG] 🚀 Logs exported to {DASH_DIR.parent}")
         return
-
+    from importlib import resources
+    from . import dashboard
+    html_index = resources.files(dashboard) / "index.html"
     if fmt == "html":
-        event.export_html(Path("devlog/dashboard/index.html"),)
+        #event.export_html(Path("devlog/dashboard/index.html"),)
+        event.export_html(Path(html_index))
         typer.echo(f"[LOG] ✅ Data moved to HTML: {DASH_DIR}")
         return
 
