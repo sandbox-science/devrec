@@ -163,7 +163,8 @@ def status():
         import subprocess
 
         branch = subprocess.check_output(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"]
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            stderr=subprocess.PIPE
         ).strip().decode()
         typer.echo(f"[DEVLOG] Git branch: {branch}")
     except Exception:
