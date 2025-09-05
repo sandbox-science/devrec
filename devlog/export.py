@@ -179,7 +179,7 @@ class Export:
         """
         from importlib import resources
         from . import dashboard
-        assets = ["style.css", "toogle-mode.js"]
+        assets = ["styles.css", "toggle-mode.js"]
         for file in assets:
             resource = resources.files(dashboard) / file
             with resources.as_file(resource) as source_path:
