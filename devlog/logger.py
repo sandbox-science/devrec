@@ -37,7 +37,13 @@ class Logger:
 
     def _get_current_commit(self) -> str:
         return subprocess.check_output(
-            ["git", "rev-parse", "HEAD"]
+            ["git", "rev-parse", "HEAD"],
+            # I set the following to PIPE instead of DEVNULL
+            # in case it is needed in the future for debugging purposes.
+            # This help suppress the warning when devlog is used outside
+            # a repository where git is init.
+            # TODO: Find a better way to handle this case
+            stderr=subprocess.PIPE
         ).strip().decode("utf-8")
 
     def _get_staged_files(self) -> Set[str]:
@@ -66,6 +72,8 @@ class Logger:
             current_branch = self._get_current_branch()
         except subprocess.CalledProcessError:
             # Disable git loggin if not a repo.
+            print("\n[DEVLOG] Not a git repository...")
+            print("[DEVLOG] Git activity capture disabled.")
             return
 
         while not self.stopped():
